@@ -1,3 +1,5 @@
+require_relative 'queue'
+
 class Knight
   attr_accessor :moves
 
@@ -15,12 +17,28 @@ class Knight
   end
 
   def knight_moves(start_square, end_square)
+    legal_squares = generate_legal_squares(Queue.new, start_square)
+    visited_squares = { start_square => true }
+    path = [start_square]
+    current_square = nil
+
+    puts "Possible moves from #{start_square}: "
+    legal_squares.traverse(legal_squares.head_node)
   end
 
-  def generate_legal_squares(start_square)
+  def generate_legal_squares(queue, start_square)
+    moves.each do |move, coord|
+      new_y = start_square[0] + coord[0]
+      new_x = start_square[1] + coord[1]
+
+      queue.enqueue([new_y, new_x]) if move_legal?(new_y) && move_legal?(new_x)
+    end
+
+    queue
   end
 
-  def move_legal?()
+  def move_legal?(value, board_sqroot_size = 8)
+    value >= 0 && value < board_sqroot_size
   end
 end
 
