@@ -51,50 +51,14 @@ class Queue
     dequeued_node
   end
 
-  def traverse(node)
+  def traverse(node = head_node, &block)
     return nil if empty?
 
-    if node.nil?
-      print ".\n"
-      return
-    elsif node.next_node.nil?
-      print "#{node.data}.\n"
-      return
-    else
-      print "#{node.data}, "
-      traverse(node.next_node)
-    end
+    return  if node.nil?
+
+    block.call(node) if block_given?
+
+    traverse(node.next_node, &block)
   end
 end
-
-=begin
-q = Queue.new
-
-puts "At Super Ticket Masters! Line to buy tickets for HYU concert open!"
-q_2 = Queue.new
-
-["Joe", "Jin", "Jay", "Joy", "Jan", "Jen", "Jua"][0...].each do |element|
-  puts "Joining line: #{element}"
-  q_2.enqueue(element)
-end
-
-puts "\nFirst in line: #{q_2.peek}"
-
-print "People in the queue: "
-q_2.traverse(q_2.head_node)
-
-puts ""
-
-puts "Removing poeple from the queue"
-6.times do |i|
-  next_in_line = q_2.dequeue
-
-  puts "#{next_in_line}! you can come in.\n"
-end
-
-puts "\nFirst in line: #{q_2.peek}"
-
-print "Who's left in the queue: "
-q_2.traverse(q_2.head_node)
-=end
 
