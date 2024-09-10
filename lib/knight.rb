@@ -1,5 +1,20 @@
 require_relative 'queue'
 
+class Square
+  include Comparable
+  attr_accessor :coord, :distance, :predecessor
+
+  def initialize(coord, distance, predecessor)
+    self.coord = coord
+    self.distance = distance
+    self.predecessor = predecessor
+  end
+
+  def <=>(other)
+    self.coord <=> other.coord
+  end
+end
+
 class Knight
   attr_accessor :moves
 
