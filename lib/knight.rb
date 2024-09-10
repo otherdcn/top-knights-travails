@@ -41,11 +41,28 @@ class Knight
 
     visited_squares = { start_square => true }
     path = []
-
     current_square = nil
-    puts "All possible moves for #{start_square.coord}: "
-    legal_squares.traverse { |square| print "-> #{square.data.coord} " }
-    puts ""
+
+    until legal_squares.empty?
+      current_square = legal_squares.dequeue
+      next if visited_squares[current_square]
+
+      if current_square == end_square
+        visited_squares[current_square] = true
+        break
+      else
+        squares = generate_legal_squares(current_square)
+        squares.each { |square| legal_squares.enqueue square  }
+        visited_squares[current_square] = true
+      end
+    end
+
+    while current_square
+      path.unshift(current_square)
+      current_square = current_square.predecessor
+    end
+
+    path
   end
 
   def generate_legal_squares(current_square)
