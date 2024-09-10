@@ -31,25 +31,40 @@ class Knight
     }
   end
 
-  def knight_moves(start_square, end_square)
-    legal_squares = generate_legal_squares(Queue.new, start_square)
-    visited_squares = { start_square => true }
-    path = [start_square]
-    current_square = nil
+  def knight_moves(start_coord, end_coord)
+    start_square = Square.new(start_coord, 0, nil)
+    end_square = Square.new(end_coord, nil, nil)
 
-    puts "Possible moves from #{start_square}: "
-    legal_squares.traverse(legal_squares.head_node)
+    legal_squares = Queue.new
+    squares = generate_legal_squares(start_square)
+    squares.each { |square| legal_squares.enqueue square  }
+
+    visited_squares = { start_square => true }
+    path = []
+
+    current_square = nil
+    puts "All possible moves for #{start_square.coord}: "
+    legal_squares.traverse { |square| print "-> #{square.data.coord} " }
+    puts ""
   end
 
-  def generate_legal_squares(queue, start_square)
-    moves.each do |move, coord|
-      new_y = start_square[0] + coord[0]
-      new_x = start_square[1] + coord[1]
+  def generate_legal_squares(current_square)
+    squares = []
 
-      queue.enqueue([new_y, new_x]) if move_legal?(new_y) && move_legal?(new_x)
+    moves.each do |_, coord|
+      rank = current_square.coord[0] + coord[0]
+      file = current_square.coord[1] + coord[1]
+
+      next unless move_legal?(rank) && move_legal?(file)
+      coord = [rank, file]
+      distance = current_square.distance + 1
+      predecessor = current_square
+
+      square = Square.new(coord, distance, predecessor)
+      squares << square
     end
 
-    queue
+    squares
   end
 
   def move_legal?(value, board_sqroot_size = 8)
