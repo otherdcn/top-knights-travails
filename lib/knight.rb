@@ -13,6 +13,15 @@ class Square
   def <=>(other)
     self.coord <=> other.coord
   end
+
+  def traverse_predecessors(square = self, list = [])
+    return if square.nil?
+
+    list.unshift(square)
+    traverse_predecessors(square.predecessor, list)
+
+    list
+  end
 end
 
 class Knight
@@ -40,29 +49,21 @@ class Knight
     squares.each { |square| legal_squares.enqueue square  }
 
     visited_squares = { start_square => true }
-    path = []
     current_square = nil
 
     until legal_squares.empty?
       current_square = legal_squares.dequeue
+
       next if visited_squares[current_square]
+      visited_squares[current_square] = true
 
-      if current_square == end_square
-        visited_squares[current_square] = true
-        break
-      else
-        squares = generate_legal_squares(current_square)
-        squares.each { |square| legal_squares.enqueue square  }
-        visited_squares[current_square] = true
-      end
+      break if current_square == end_square
+
+      squares = generate_legal_squares(current_square)
+      squares.each { |square| legal_squares.enqueue square  }
     end
 
-    while current_square
-      path.unshift(current_square)
-      current_square = current_square.predecessor
-    end
-
-    path
+    current_square.traverse_predecessors
   end
 
   def generate_legal_squares(current_square)
