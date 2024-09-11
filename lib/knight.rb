@@ -25,24 +25,22 @@ class Square
 end
 
 class Knight
-  attr_accessor :moves
-
-  def initialize
-    self.moves = {
-      up_left: [2, -1],
-      up_right: [2, 1],
-      left_up: [1, -2],
-      right_up: [1, 2],
-      left_down: [-1, -2],
-      right_down: [-1, 2],
-      down_left: [-2, -1],
-      down_right: [-2, 1]
-    }
-  end
+  MOVES = {
+    up_left: [2, -1],
+    up_right: [2, 1],
+    left_up: [1, -2],
+    right_up: [1, 2],
+    left_down: [-1, -2],
+    right_down: [-1, 2],
+    down_left: [-2, -1],
+    down_right: [-2, 1]
+  }
 
   def knight_moves(start_coord, end_coord)
     start_square = Square.new(start_coord, 0, nil)
     end_square = Square.new(end_coord, nil, nil)
+
+    return [start_square] if start_square == end_square
 
     legal_squares = Queue.new
     squares = generate_legal_squares(start_square)
@@ -69,11 +67,11 @@ class Knight
   def generate_legal_squares(current_square)
     squares = []
 
-    moves.each do |_, coord|
+    MOVES.each do |_, coord|
       file = current_square.coord[0] + coord[0]
       rank = current_square.coord[1] + coord[1]
 
-      next unless move_legal?(rank) && move_legal?(file)
+      next unless move_legal?([rank, file])
       coord = [file, rank]
       distance = current_square.distance + 1
       predecessor = current_square
@@ -85,8 +83,8 @@ class Knight
     squares
   end
 
-  def move_legal?(value, board_sqroot_size = 8)
-    value >= 0 && value < board_sqroot_size
+  def move_legal?(coord, board_sqroot_size = 8)
+    coord.all? { |point| point.between?(0, board_sqroot_size - 1) }
   end
 end
 
