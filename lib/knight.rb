@@ -70,11 +70,11 @@ class Knight
     squares = []
 
     moves.each do |_, coord|
-      rank = current_square.coord[0] + coord[0]
-      file = current_square.coord[1] + coord[1]
+      file = current_square.coord[0] + coord[0]
+      rank = current_square.coord[1] + coord[1]
 
       next unless move_legal?(rank) && move_legal?(file)
-      coord = [rank, file]
+      coord = [file, rank]
       distance = current_square.distance + 1
       predecessor = current_square
 
