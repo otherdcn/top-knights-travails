@@ -14,5 +14,5 @@ path = knight.knight_moves(start_coord, end_coord)
 
 puts "You made it in #{path.size - 1} moves!  Here's your path: "
 path.each do |square|
-  print "#{square.coord}\n"
+  print "#{square.data}\n"
 end
