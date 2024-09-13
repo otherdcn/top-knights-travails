@@ -75,27 +75,45 @@ class Knight
 
     return [start_square] if start_square_id == end_square_id
 
-    legal_squares = Queue.new
-    squares = graph.adjacent_vertices(start_square_id)
-    squares.each { |square| legal_squares.enqueue square  }
+    bfs(start_square, end_square)
+  end
 
-    visited_squares = { start_square => true }
-    current_square = nil
+  def bfs(source_vertex, target_vertex)
+    graph.adjacency_list.each do |k,v|
+      next if v[:vertex] == source_vertex
+      v[:vertex].colour = :white
+      v[:vertex].distance = nil
+      v[:vertex].predecessor = nil
+    end
+
+    source_vertex.colour = :grey
+    source_vertex.distance = 0
+    source_vertex.predecessor = nil
+
+    legal_squares = Queue.new
+    legal_squares.enqueue(source_vertex)
 
     until legal_squares.empty?
       current_square = legal_squares.dequeue
+
+      break if current_square == target_vertex
+
       current_square_id = gen_square_id(current_square.data)
-
-      next if visited_squares[current_square]
-      visited_squares[current_square] = true
-
-      break if current_square == end_square
-
       squares = graph.adjacent_vertices(current_square_id)
-      squares.each { |square| legal_squares.enqueue square  }
+      squares.each do |square|
+        next unless square.colour == :white
+
+        square.colour = :grey
+        square.distance = current_square.distance + 1
+        square.predecessor = current_square
+
+        legal_squares.enqueue(square)
+      end
+
+      current_square.colour = :black
     end
 
-    current_square.traverse_predecessors(start_square)
+    current_square.shortest_path
   end
 
   def move_legal?(coord, size = board_size)
