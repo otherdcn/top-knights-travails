@@ -67,8 +67,8 @@ class Knight
   end
 
   def knight_moves(start_coord, end_coord)
-    raise StandardError, "Source vertex not present" unless move_legal? start_coord
-    raise StandardError, "Target vertex not present" unless move_legal? end_coord
+    raise StandardError, "Start square not present" unless move_legal? start_coord
+    raise StandardError, "End square not present" unless move_legal? end_coord
 
     start_square_id = gen_square_id(start_coord)
     start_square = graph.vertex(start_square_id)
@@ -81,25 +81,25 @@ class Knight
     bfs(start_square, end_square)
   end
 
-  def bfs(source_vertex, target_vertex)
+  def bfs(start_square, end_square)
     graph.adjacency_list.each do |k,v|
-      next if v[:vertex] == source_vertex
+      next if v[:vertex] == start_square
       v[:vertex].colour = :white
       v[:vertex].distance = nil
       v[:vertex].predecessor = nil
     end
 
-    source_vertex.colour = :grey
-    source_vertex.distance = 0
-    source_vertex.predecessor = nil
+    start_square.colour = :grey
+    start_square.distance = 0
+    start_square.predecessor = nil
 
     legal_squares = Queue.new
-    legal_squares.enqueue(source_vertex)
+    legal_squares.enqueue(start_square)
 
     until legal_squares.empty?
       current_square = legal_squares.dequeue
 
-      break if current_square == target_vertex
+      break if current_square == end_square
 
       current_square_id = gen_square_id(current_square.data)
       squares = graph.adjacent_vertices(current_square_id)
