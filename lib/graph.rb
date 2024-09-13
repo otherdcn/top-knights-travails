@@ -2,26 +2,24 @@ require_relative 'linked_list'
 
 class Vertex
   include Comparable
-  attr_accessor :data, :distance, :predecessor
+  attr_accessor :data, :colour, :distance, :predecessor
 
-  def initialize(data, predecessor)
+  def initialize(data)
     self.data = data
-    self.predecessor = predecessor
+    self.colour = :white
+    self.distance = nil
+    self.predecessor = nil
   end
 
   def <=>(other)
     self.data <=> other.data
   end
 
-  def traverse_predecessors(start_square, current_square = self, list = [])
-    puts "Checking #{current_square.data} against #{start_square.data}..."
-    if current_square == start_square
-      list.unshift(current_square)
-      return
-    end
+  def shortest_path(square = self, list = [])
+    return if square.nil?
 
-    list.unshift(current_square)
-    traverse_predecessors(start_square, current_square.predecessor, list)
+    list.unshift(square)
+    shortest_path(square.predecessor, list)
 
     list
   end
@@ -35,7 +33,7 @@ class Graph
   end
 
   def add_vertex(key, data)
-    vertex = Vertex.new(data, nil)
+    vertex = Vertex.new(data)
     edges =  LinkedList::Singly.new
 
     adjacency_list[key] = { vertex: vertex, edges: edges }
@@ -75,13 +73,8 @@ class Graph
   def adjacent_vertices(key)
     return if adjacency_list[key].nil?
 
-    list = adjacency_list[key][:edges].traverse[1]
-    source_vertex = vertex(key)
-
-    list.map do |list_key|
-      target_vertex = vertex(list_key)
-      target_vertex.predecessor = source_vertex
-      target_vertex
+    adjacency_list[key][:edges].traverse[1].map do |key|
+      adjacency_list[key][:vertex]
     end
   end
 end
