@@ -67,6 +67,9 @@ class Knight
   end
 
   def knight_moves(start_coord, end_coord)
+    raise StandardError, "Source vertex not present" unless move_legal? start_coord
+    raise StandardError, "Target vertex not present" unless move_legal? end_coord
+
     start_square_id = gen_square_id(start_coord)
     start_square = graph.vertex(start_square_id)
 

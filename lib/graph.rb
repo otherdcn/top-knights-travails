@@ -48,13 +48,13 @@ class Graph
   def add_edge(source, target)
     raise StandardError, "Source vertex not present" unless adjacency_list.has_key? source
     raise StandardError, "Target vertex not present" unless adjacency_list.has_key? target
-    return nil if nodes_connected?(source, target)
+    return nil if vertices_connected?(source, target)
 
     adjacency_list[source][:edges].append(target) 
     adjacency_list[target][:edges].append(source)
   end
 
-  def nodes_connected?(source, target)
+  def vertices_connected?(source, target)
     return if adjacency_list[source].nil?
 
     adjacency_list[source][:edges].contains(target)
