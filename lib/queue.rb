@@ -1,6 +1,6 @@
 class Node
   attr_accessor :data, :next_node
-  
+
   def initialize(data)
     self.data = data
   end
@@ -31,9 +31,9 @@ class Queue
       self.head_node = node
     elsif tail_node.nil?
       self.tail_node = node
-      self.head_node.next_node = tail_node
+      head_node.next_node = tail_node
     else
-      self.tail_node.next_node = node
+      tail_node.next_node = node
       self.tail_node = node
     end
 
@@ -54,11 +54,10 @@ class Queue
   def traverse(node = head_node, &block)
     return nil if empty?
 
-    return  if node.nil?
+    return if node.nil?
 
     block.call(node) if block_given?
 
     traverse(node.next_node, &block)
   end
 end
-

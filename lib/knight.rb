@@ -1,5 +1,5 @@
-require_relative 'queue'
-require_relative 'graph'
+require_relative "queue"
+require_relative "graph"
 
 class Knight
   attr_accessor :graph, :board_size
@@ -13,7 +13,7 @@ class Knight
     right_down: [-1, 2],
     down_left: [-2, -1],
     down_right: [-2, 1]
-  }
+  }.freeze
 
   def initialize(board_size = 8)
     self.graph = Graph.new
@@ -55,11 +55,12 @@ class Knight
   def generate_legal_squares(current_square)
     squares = []
 
-    MOVES.each do |_, coord|
+    MOVES.each_value do |coord|
       file = current_square[0] + coord[0]
       rank = current_square[1] + coord[1]
 
       next unless move_legal?([rank, file])
+
       squares << [file, rank]
     end
 
@@ -82,8 +83,9 @@ class Knight
   end
 
   def bfs(start_square, end_square)
-    graph.adjacency_list.each do |k,v|
+    graph.adjacency_list.each_value do |v|
       next if v[:vertex] == start_square
+
       v[:vertex].colour = :white
       v[:vertex].distance = nil
       v[:vertex].predecessor = nil
@@ -123,4 +125,3 @@ class Knight
     coord.all? { |point| point.between?(0, size - 1) }
   end
 end
-

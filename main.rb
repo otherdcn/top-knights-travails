@@ -1,4 +1,4 @@
-require_relative 'lib/knight'
+require_relative "lib/knight"
 
 print "Enter start point (double digits from 0-7 seperated by comma): "
 start_coord = gets.chomp.split(",").map(&:to_i)

@@ -1,4 +1,4 @@
-require_relative 'linked_list'
+require_relative "linked_list"
 
 class Vertex
   include Comparable
@@ -12,7 +12,7 @@ class Vertex
   end
 
   def <=>(other)
-    self.data <=> other.data
+    data <=> other.data
   end
 
   def shortest_path(square = self, list = [])
@@ -29,7 +29,7 @@ class Graph
   attr_accessor :adjacency_list
 
   def initialize
-    self.adjacency_list = Hash.new
+    self.adjacency_list = ({})
   end
 
   def add_vertex(key, data)
@@ -46,16 +46,16 @@ class Graph
   end
 
   def add_edge(source, target)
-    raise StandardError, "Source vertex not present" unless adjacency_list.has_key? source
-    raise StandardError, "Target vertex not present" unless adjacency_list.has_key? target
+    raise StandardError, "Source vertex not present" unless adjacency_list.key? source
+    raise StandardError, "Target vertex not present" unless adjacency_list.key? target
     return nil if vertices_connected?(source, target)
 
-    adjacency_list[source][:edges].append(target) 
+    adjacency_list[source][:edges].append(target)
     adjacency_list[target][:edges].append(source)
   end
 
   def vertices_connected?(source, target)
-    return if adjacency_list[source].nil?
+    return false if adjacency_list[source].nil?
 
     adjacency_list[source][:edges].contains(target)
   end
